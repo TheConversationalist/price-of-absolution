@@ -1,0 +1,13 @@
+{
+  "defaultTimeoutSeconds": 20,
+  "storyStartSceneId": "intro",
+  "audio": {
+    "narrationVolume": 1,
+    "ambientVolume": 0.7,
+    "soundtrackVolume": 0.6,
+    "fadeDurationMs": 800
+  },
+  "network": {
+    "serverUrl": "ws://localhost:8787"
+  }
+}

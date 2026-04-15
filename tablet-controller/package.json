@@ -1,0 +1,18 @@
+{
+  "name": "tablet-controller",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "cannon-es": "^0.20.0",
+    "p5": "^1.9.3",
+    "three": "^0.166.1"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "StorySceneGraph",
+  "type": "object",
+  "required": ["title", "startSceneId", "scenes"],
+  "properties": {
+    "title": { "type": "string" },
+    "startSceneId": { "type": "string" },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "sceneId",
+          "displayText",
+          "choices",
+          "timeoutSeconds",
+          "onTimeout"
+        ],
+        "properties": {
+          "sceneId": { "type": "string" },
+          "displayText": { "type": "string" },
+          "narrationAudio": { "type": "string" },
+          "backgroundVideo": { "type": "string" },
+          "ambientSfx": { "type": "string" },
+          "soundtrack": { "type": "string" },
+          "timeoutSeconds": { "type": "number", "minimum": 1 },
+          "onTimeout": { "type": "string" },
+          "choices": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["id", "label", "targetSceneId"],
+              "properties": {
+                "id": { "type": "string" },
+                "label": { "type": "string" },
+                "targetSceneId": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

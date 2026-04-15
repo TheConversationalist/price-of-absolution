@@ -1,0 +1,14 @@
+:: intro
+You wake in a whiteout. Which route will keep you alive?
+[[Climb the ridge->ridge]]
+[[Descend into the valley->valley]]
+
+:: ridge
+The ridge is exposed, but you can see a distant flare.
+[[Signal the flare->intro]]
+[[Hide behind ice formations->valley]]
+
+:: valley
+The valley is quieter but the cold is sharper.
+[[Follow animal tracks->ridge]]
+[[Wait and conserve heat->intro]]

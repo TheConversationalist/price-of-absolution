@@ -1,0 +1,48 @@
+{
+  "title": "Arctic Survival Story",
+  "startSceneId": "intro",
+  "scenes": [
+    {
+      "sceneId": "intro",
+      "displayText": "You wake in a whiteout. Your map is half-buried in ice. Which path do you take?",
+      "narrationAudio": "assets/audio/intro-narration.mp3",
+      "backgroundVideo": "assets/video/blizzard-loop.mp4",
+      "ambientSfx": "assets/audio/wind-loop.mp3",
+      "soundtrack": "assets/audio/score-main.mp3",
+      "timeoutSeconds": 15,
+      "onTimeout": "intro",
+      "choices": [
+        { "id": "route_ridge", "label": "Climb the ridge", "targetSceneId": "ridge" },
+        { "id": "route_valley", "label": "Descend to valley", "targetSceneId": "valley" }
+      ]
+    },
+    {
+      "sceneId": "ridge",
+      "displayText": "The ridge reveals a flare in the distance. A storm front closes in.",
+      "narrationAudio": "assets/audio/ridge-narration.mp3",
+      "backgroundVideo": "assets/video/ridge-loop.mp4",
+      "ambientSfx": "assets/audio/wind-loop.mp3",
+      "soundtrack": "assets/audio/score-tense.mp3",
+      "timeoutSeconds": 12,
+      "onTimeout": "intro",
+      "choices": [
+        { "id": "ridge_signal", "label": "Signal the flare", "targetSceneId": "intro" },
+        { "id": "ridge_hide", "label": "Shelter behind ice", "targetSceneId": "valley" }
+      ]
+    },
+    {
+      "sceneId": "valley",
+      "displayText": "You find tracks in fresh snow. They could be rescue... or danger.",
+      "narrationAudio": "assets/audio/valley-narration.mp3",
+      "backgroundVideo": "assets/video/valley-loop.mp4",
+      "ambientSfx": "assets/audio/frost-loop.mp3",
+      "soundtrack": "assets/audio/score-main.mp3",
+      "timeoutSeconds": 12,
+      "onTimeout": "intro",
+      "choices": [
+        { "id": "valley_follow", "label": "Follow the tracks", "targetSceneId": "ridge" },
+        { "id": "valley_wait", "label": "Hold position", "targetSceneId": "intro" }
+      ]
+    }
+  ]
+}
