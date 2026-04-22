@@ -1,0 +1,197 @@
+:: StoryTitle
+The Price Of Absolution
+
+
+:: StoryData
+{
+  "ifid": "65C9C616-9685-4860-A996-D5E644B96B4F",
+  "format": "Harlowe",
+  "format-version": "3.3.9",
+  "start": "The Price Of Absolution",
+  "zoom": 0.6
+}
+
+
+:: ... {"position":"3100,700","size":"200,200"}
+
+
+
+:: Continue {"position":"4150,250","size":"100,100"}
+"You cannot make progress without making decisions." -Jim Rohn
+
+[[Start]]
+
+
+:: Definition {"position":"4150,125","size":"100,100"}
+ab·so·lu·tion
+/ˌabsəˈlo͞oSHən/
+noun
+formal release from guilt, obligation, or punishment.
+"absolution from the sentence"
+
+
+
+[[Continue]]
+
+
+:: Finish weaving the hammock {"position":"2800,100","size":"100,100"}
+You head into the small wooden shed on the side of the house and begin weaving. You take your time working with your hands and your tools. About 20 minutes later you are just about ready to stand up when you hear the front door open. 
+
+The children, Dana and your youngest, Pyotr, dash outside with the neighbor's girl, Mariya, waving goodbye as she runs through the snow covered gravelly road back up to her parents' house. 
+
+"Good night, Mr. Tumislav!" Mariya shouts while waving as she runs past your open fence. Pyotr sees you and shouts out, "Papa!" then runs to you with his arms outstretched. You pick him up and throw him in the air and catch him again, his smile and giggles filling the atmosphere.
+
+Suddenly, the air is filled with a sound that drowns out everything else: the heavy, rolling thunder of assault vehicles tearing through the neighborhood. ''The Volya Front'', a highly ruthless and centralized military faction playing at being freedom fighters against your scattered government. Rumor has it they have been losing the war and have become desperate for food and medicine lately. 
+
+[[Watch them pass by]]
+
+[[Go indoors]]
+
+
+:: Go indoors {"position":"2700,300","size":"100,100"}
+You set Pyotr down firmly. "Inside," you say, keeping your voice calm, though your eyes dart toward the encroaching dust cloud at the end of the road. "Time for the Statue game, quickly."
+
+You usher Dana and Pyotr through the door, closing it with a soft, practiced click. Inside, the kitchen remains warm and safe, smelling of dried apples Katya has strung up for winter—a simple, hopeful luxury against the endless, biting snow outside. Katya stands by the stove; she catches your urgent expression but does not panic. She simply wipes her flour-dusted hands on her apron and kneels, pulling the children into a soft, protective huddle. "We’re playing the Statue game now," Katya whispers, her voice a steady anchor, though her thumb gently traces a rhythmic, calming pattern on Pyotr’s shoulder. "We don't speak, we don't fidget, and we don't let our breathing make a sound. If we can be still until they pass, we win."
+
+Dana reaches out and squeezes her brother’s hand, a small, fiercely protective gesture that you catch out of the corner of your eye. In an instant you are filled with pride that your daughter is showing such maturity and bravery, but regret and guilt that she is in a situation where she needs to be this way. You feel Katya’s hand slip into his, her grip a silent, desperate plea for their future.
+
+[[Join the huddle]] or [[Peek outside the window]]
+
+
+:: Go inside for dinner {"position":"3100,300","size":"100,100"}
+The winter air bites, but you manage a tired smile as you step into the house. Your joints ache from the trek, but the rock-hard bread under your arm is a victory. Then, you see it—the scent of cinnamon and baked fruit cuts through the bitter cold.
+
+Katya is by the stove, her face flushed with an uncharacteristic pride. She holds up a small, lopsided pie, the crust thin and patched with scraps of dough. She had traded her mother’s silver locket for the apples and a handful of flour.
+
+Placing the pie on the counter she hugs you and presses a gentle kiss on your cheek, her eyes bright despite the exhaustion. At the table, Pyotr and Dana look up, their hollow, hungry faces transforming at the sight of the steam rising from the golden crust. For a fleeting second, the war is pushed back by the smell of home. You set your bread down, and Katya takes your hands, pressing her forehead to yours. You are exhausted and starving, but for this one moment, you are still a family.
+
+Then, the silence is broken. A low, mechanical rumble vibrates through the floorboards. Dust shakes from the rafters, rattling the precious pie on the table. A heavy, armored tread churns the frozen mud just outside your fence.
+
+The Volya Front has arrived. A highly ruthless and centralized military faction playing at being freedom fighters against your scattered government. Rumor has it they have been losing the war and have become desperate for food and medicine lately. 
+
+[[Peek outside the window]]  or [[Play the statue game]]
+
+
+:: Join the huddle {"position":"2900,400","size":"100,100"}
+You pull them close, a desperate knot of warmth—Katya's shoulder firm against yours, the children tucked safely between you. You close your eyes, anchoring yourself to the rhythmic, shallow sound of their breathing in the fragile peace of the huddle.
+
+In a heartbeat, the world shatters. The front wall disintegrates in a deafening roar, replaced by a blinding spray of stone, splintered oak, and white-hot debris. The pressure wave hits like a physical hammer, stealing the air from your lungs and throwing you into darkness.
+
+When the gray dust begins to settle, the silence is more terrifying than the blast. Beside you, the floor is dark and slick. Katya is slumped against the ruins of the stove, her form broken and still. The light has left her eyes, taken by the jagged debris that tore through the room with clinical, devastating force, leaving her motionless in the wreckage.
+
+Pyotr, who was tucked deepest against your chest, gasps—a shallow, desperate sound. He struggles for air, but his breath is heavy and labored, a dark, spreading stain rapidly soaking through his coat as he shudders in your arms. Of Dana, there is only the terrifying, empty absence where she once stood.
+
+Your ears ring with a high, piercing whine, but the stillness of the room is louder. You are coated in the dust of your home and the heavy, metallic scent of the aftermath. You are alive, shivering in the freezing wind now pouring through the gaping hole in the wall, surrounded by the ruins of everything you swore to protect.
+
+The Volya Front has arrived, and they have left you with nothing but the silence of the lost.
+
+[[...]]
+
+
+:: Katya {"position":"4500,100","size":"200,200"}
+''Katya:'' The mother. Your hands are busy with lessons, healing, and the warmth of the home.
+
+(The story will refer to you by the name you choose from now on.)
+
+[[The Weight of Ash (K)]] 
+
+
+:: Peek outside the window {"position":"2500,475","size":"100,100"}
+Stepping away from your family, you pull the curtain back slightly. For a heartbeat, the street is still. Then, the shell strikes.
+
+The world dissolves. The floor shatters, the walls explode into pulverized brick, and you are hurled backwards by the absolute force of the blast. When you finally claw yourself upright, the silence is deafening, punctuated only by a high, sustained shriek ringing in your ears.
+
+You turn. The kitchen is nothing but a jagged, smoking pile of rubble and ruin.
+
+The devastation is absolute. Katya is pinned beneath a fractured beam, her form broken and lifeless amidst the twisted debris. Nearby, the heavy wreckage marks the spot where the children were huddled just moments before. Only the small, scattered remnants of their shoes remain, abandoned in the dark, spreading pools on the floor. Pyotr lies several feet away, his small frame motionless against the wall, unresponsive to the freezing draft that now howls through the room.
+
+You stand trembling in the wreckage, coated in the thick dust and the terrible, metallic reality of your family's end. The scent of iron and smoke clogs your throat. Through the gaping hole in your wall, you see the Volya Front’s vehicles churning through the mud and snow, unbothered, grinding the ruins of your home into the frozen ground. They don't even slow down. They’ve moved on, leaving you alone in the hollowed-out tomb of your life.
+
+[[...]]
+
+
+:: Play the statue game {"position":"3225,475","size":"100,100"}
+Katya kneels, pulling the children into a soft, protective huddle. "We’re playing the Statue game now," she whispers, her voice a steady anchor, though her thumb traces a rhythmic, calming pattern on Pyotr’s shoulder. "We don't speak, we don't move, and we don't let our breathing make a sound. If we can stay perfectly still until they pass, we win."
+
+Dana reaches out and squeezes her brother’s hand, a small, fiercely protective gesture. You are filled with a sudden, sharp pride for her bravery, quickly followed by a crushing weight of guilt that she has to be brave at all. You feel Katya’s hand slip into yours, her grip a silent, desperate plea for their future.
+
+You begin to whisper, "Everything is going to be—"
+
+But the world dissolves. The floor shatters, the walls explode into pulverized brick, and you are hurled backward by a wall of heat and pressure.
+
+When you finally claw yourself upright, the silence is deafening, punctuated only by a high-pitched ringing in your ears. You turn toward where they were. The kitchen is gone, replaced by a jagged, smoking pile of rubble.
+
+The devastation is total. Katya is pinned beneath a heavy, fractured beam, her form broken beyond repair. Beside her, the space where the children were is a nightmare of wreckage and shadow. You see the small, unmistakable remnants of Dana’s shoes in the debris, and Pyotr lies a few feet away, still and silent in the freezing draft.
+
+You stand trembling in the wreckage, your clothes soaked and your mind reeling. The heavy, metallic scent of iron and dust clogs your throat. Through the gaping hole where your life used to be, you see the Volya Front’s vehicles churning through the mud, unbothered, grinding the ruins of your home into the frozen ground.
+
+They don’t even slow down. They move on, leaving you alone in the hollowed-out tomb of your world.
+
+[[...]]
+
+
+:: Start {"position":"4100,400","size":"200,200"}
+It is a Tuesday afternoon. The sun is streaming through the schoolhouse window, illuminating the chalk dust, or perhaps the smell of fresh bread is wafting from your oven. Or maybe you are weaving together a net for a fishing trip in the near future. It is a day of predictable rhythms and comforting sounds.
+
+You are just a ''Parent''. Your life has been defined by the simple, tiring and beautiful duties of parenthood. 
+
+There is nothing extraordinary about you. Life has been as normal as normal can be.
+
+(text-colour:(hsl:0,0.8039,0.5,0.8))[Your choices ''will'' have consequences...]
+
+Will you be [[Yuri]] or [[Katya]]?
+
+
+:: The Price Of Absolution {"position":"4100,0","size":"200,100"}
+(align:"<==")+(box:"=XX=")[The Price Of Absolution]
+
+
+
+
+[[Definition]]
+
+
+:: The Weight of Ash (K) {"position":"5000,200","size":"100,100"}
+Your partner, Yuri, is due home soon. Your children, Ella and Toby, were playing a loud, joyful game nearby. In the midst of that comforting ordinary world, you had a small, familiar item you always kept close—a token of your children's innocent joy.
+
+
+:: The Weight of Ash (Y) {"position":"3200,100","size":"100,100"}
+You have just left the market with a wrapped loaf of bread and two miserable looking potatoes, the only things you managed to trade for fixing an old radio. //Food is becoming more difficult to come by//, you think to yourself. //There has to be something else I can do or fix to trade for more food.// These thoughts haunt you as you make your way home alone, cautious of anyone that holds their glance at you for too long.
+
+As you approach your house, you notice the sweet scent of baking apples. Apple pie? //That woman has done it again!// You wonder what it is that Katya, your wife, had to trade in order to get her hands on apples. Before opening the door and heading inside you notice the hammock you have been weaving for the kids over the past few weeks. If you take a little bit of time now, you think you could finish it before going inside for dinner.
+
+[[Finish weaving the hammock]] or  [[Go inside for dinner]]
+
+
+:: Try again {"position":"4150,750","size":"100,100"}
+It is a Tuesday afternoon. The sun is streaming through the schoolhouse window, illuminating the chalk dust, or perhaps the smell of fresh bread is wafting from your oven. Or maybe you are weaving together a net for a fishing trip in the near future. It is a day of predictable rhythms and comforting sounds.
+
+You are just a ''Parent''. Your life was defined by the simple, tiring and beautiful duties of parenthood. 
+
+There is nothing extraordinary about you. Life was as normal as normal can be.
+
+Your choices ''will'' have consequences...
+
+Will you be [[Yuri]] or [[Katya]]?
+
+
+:: Watch them pass by {"position":"2300,200","size":"100,100"}
+You watch the armored trucks get closer and closer. 
+
+They fire their guns at you, blowing a hole the size of a fist through the child in your arms. You want to scream, but find it hard to process anything that just happened. Taking a step forward, you find yourself falling over the limp body of Pyotr. The world goes silent.
+
+Information is not registering to you. You attempt to move but find it harder and harder.
+
+You've been shot.
+
+(text-colour:(hsl:0,0.8039,0.5,0.8))[You bleed out on the soggy ground crumpled over the corpse of your son.]
+
+[[Try again]]
+
+
+:: Yuri {"position":"3600,100","size":"200,200"}
+You are ''Yuri Tumislav'', The father. Your strength is in quiet reliability, fixing broken things, and telling stories.
+
+(The story will refer to you by the name you choose from now on.)
+
+[[The Weight of Ash (Y)]]
