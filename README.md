@@ -12,10 +12,12 @@ Interactive Arctic solo-survival story proof-of-concept.
 ## Quick Start
 
 1. Install Node.js 20+ and npm.
-2. From repository root, run `npm install`.
-3. Start relay server: `npm run dev:sync`.
-4. Start projection app: `npm run dev:book`.
-5. Start tablet app: `npm run dev:tablet`.
+2. Open a terminal and `cd /Users/jonathana.mohr/Documents/Capstone/Code/price-of-absolution`.
+3. From repository root, run `npm install`.
+4. In terminal #1, start relay server: `npm run dev:sync`.
+5. In terminal #2, start projection app: `npm run dev:book`.
+6. In terminal #3, start tablet app: `npm run dev:tablet`.
+7. Open the app URLs printed by Vite in each terminal (default ports are usually `5173`/`5174`).
 
 ## Story Authoring
 
