@@ -5,13 +5,16 @@
   "workspaces": [
     "book-projection",
     "tablet-controller",
-    "sync-server"
+    "sync-server",
+    "quad-lab"
   ],
   "scripts": {
+    "dev:quad": "npm --workspace quad-lab run dev",
     "dev:book": "npm --workspace book-projection run dev",
     "dev:tablet": "npm --workspace tablet-controller run dev",
     "dev:sync": "npm --workspace sync-server run dev",
     "build": "npm --workspace book-projection run build && npm --workspace tablet-controller run build",
+    "media:sync": "node scripts/sync-book-media.mjs",
     "story:import": "node scripts/import-twine.mjs story.twee shared/story/story.json",
     "demo:replay": "node scripts/replay-demo.mjs"
   }

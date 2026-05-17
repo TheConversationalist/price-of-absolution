@@ -1,43 +1,36 @@
 export class MediaEngine {
-  constructor(p) {
+  /**
+   * @param {import('p5').default} p
+   * @param {import('./projectionView.js').ProjectionView} projectionView
+   */
+  constructor(p, projectionView) {
     this.p = p;
-    this.video = null;
+    this.projectionView = projectionView;
     this.narration = null;
     this.ambient = null;
     this.soundtrack = null;
   }
 
-  applyScene(scene, runtimeConfig) {
-    this._replaceVideo(scene.backgroundVideo);
+  /**
+   * @param {object} hooks
+   * @param {function(number): void} [hooks.onClipDurationSeconds]
+   * @param {function(): void} [hooks.onVideoEnded]
+   */
+  applyScene(scene, runtimeConfig, hooks = {}) {
+    const videoVol = runtimeConfig.audio?.videoVolume ?? 0;
+    const loop = runtimeConfig.playback?.loopBackgroundVideo === true;
+    const onClipDurationSeconds = hooks.onClipDurationSeconds;
+    const onEnded = hooks.onVideoEnded;
+
+    this.projectionView.setBackgroundVideo(scene.backgroundVideo ?? '', videoVol, {
+      loop,
+      holdFirstFrame: scene.holdFirstFrame === true,
+      onClipDurationSeconds,
+      onEnded
+    });
     this._replaceAudio('narration', scene.narrationAudio, runtimeConfig.audio.narrationVolume, false);
     this._replaceAudio('ambient', scene.ambientSfx, runtimeConfig.audio.ambientVolume, true);
     this._replaceAudio('soundtrack', scene.soundtrack, runtimeConfig.audio.soundtrackVolume, true);
-  }
-
-  drawBackground() {
-    if (!this.video) {
-      this.p.background(10, 20, 35);
-      return;
-    }
-
-    this.p.image(this.video, 0, 0, this.p.width, this.p.height);
-  }
-
-  _replaceVideo(path) {
-    if (!path) {
-      return;
-    }
-
-    if (this.video) {
-      this.video.remove();
-      this.video = null;
-    }
-
-    this.video = this.p.createVideo([path], () => {
-      this.video.loop();
-      this.video.volume(0);
-    });
-    this.video.hide();
   }
 
   _replaceAudio(channel, path, volume, loop) {

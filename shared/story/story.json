@@ -1,48 +1,209 @@
 {
-  "title": "Arctic Survival Story",
-  "startSceneId": "intro",
+  "title": "The Price of Absolution",
+  "startSceneId": "scene_00_title",
   "scenes": [
     {
-      "sceneId": "intro",
-      "displayText": "You wake in a whiteout. Your map is half-buried in ice. Which path do you take?",
-      "narrationAudio": "assets/audio/intro-narration.mp3",
-      "backgroundVideo": "assets/video/blizzard-loop.mp4",
-      "ambientSfx": "assets/audio/wind-loop.mp3",
-      "soundtrack": "assets/audio/score-main.mp3",
-      "timeoutSeconds": 15,
-      "onTimeout": "intro",
+      "sceneId": "scene_00_title",
+      "displayText": "Begin when you are ready.",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-scene_01_opening.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 3600,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "scene_00_title",
       "choices": [
-        { "id": "route_ridge", "label": "Climb the ridge", "targetSceneId": "ridge" },
-        { "id": "route_valley", "label": "Descend to valley", "targetSceneId": "valley" }
+        {
+          "id": "poa_start_reading",
+          "label": "Start Reading",
+          "targetSceneId": "scene_01_opening"
+        }
+      ],
+      "holdFirstFrame": true,
+      "hideTabletTimer": true
+    },
+    {
+      "sceneId": "scene_01_opening",
+      "displayText": "The evening is settling. Go inside for dinner, or stay to finish weaving the hammock?",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-scene_01_opening.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 30,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "scene_00_title",
+      "choices": [
+        {
+          "id": "poa_dinner",
+          "label": "Go inside for dinner",
+          "targetSceneId": "scene_02_track2"
+        },
+        {
+          "id": "poa_hammock",
+          "label": "Finish weaving the hammock",
+          "targetSceneId": "scene_02_track1"
+        }
       ]
     },
     {
-      "sceneId": "ridge",
-      "displayText": "The ridge reveals a flare in the distance. A storm front closes in.",
-      "narrationAudio": "assets/audio/ridge-narration.mp3",
-      "backgroundVideo": "assets/video/ridge-loop.mp4",
-      "ambientSfx": "assets/audio/wind-loop.mp3",
-      "soundtrack": "assets/audio/score-tense.mp3",
-      "timeoutSeconds": 12,
-      "onTimeout": "intro",
+      "sceneId": "scene_02_track1",
+      "displayText": "You stay with the hammock. Do you peek out the window or join the huddle?",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-scene_02_track1.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 25,
+      "choicesRevealSecondsBeforeEnd": 8,
+      "onTimeout": "scene_00_title",
       "choices": [
-        { "id": "ridge_signal", "label": "Signal the flare", "targetSceneId": "intro" },
-        { "id": "ridge_hide", "label": "Shelter behind ice", "targetSceneId": "valley" }
+        {
+          "id": "track1_peek",
+          "label": "Peek out the window",
+          "targetSceneId": "scene_03_t1_peek"
+        },
+        {
+          "id": "track1_huddle",
+          "label": "Join the huddle",
+          "targetSceneId": "scene_03_t1_huddle"
+        }
       ]
     },
     {
-      "sceneId": "valley",
-      "displayText": "You find tracks in fresh snow. They could be rescue... or danger.",
-      "narrationAudio": "assets/audio/valley-narration.mp3",
-      "backgroundVideo": "assets/video/valley-loop.mp4",
-      "ambientSfx": "assets/audio/frost-loop.mp3",
-      "soundtrack": "assets/audio/score-main.mp3",
-      "timeoutSeconds": 12,
-      "onTimeout": "intro",
+      "sceneId": "scene_02_track2",
+      "displayText": "You went in for dinner, but the outside world still moves. Watch them pass or stay inside?",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-scene_02_track2.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 25,
+      "choicesRevealSecondsBeforeEnd": 8,
+      "onTimeout": "scene_00_title",
       "choices": [
-        { "id": "valley_follow", "label": "Follow the tracks", "targetSceneId": "ridge" },
-        { "id": "valley_wait", "label": "Hold position", "targetSceneId": "intro" }
+        {
+          "id": "track2_watch",
+          "label": "Watch them pass by",
+          "targetSceneId": "scene_03_t2_watch"
+        },
+        {
+          "id": "track2_inside",
+          "label": "Go inside",
+          "targetSceneId": "scene_03_t2_inside"
+        }
       ]
+    },
+    {
+      "sceneId": "scene_03_t1_peek",
+      "displayText": "A quiet hinge turns. The story moves toward the peek ending.",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-scene_03_t1_peek.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 20,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "ending_peek",
+      "choices": [],
+      "nextSceneId": "ending_peek"
+    },
+    {
+      "sceneId": "scene_03_t1_huddle",
+      "displayText": "You step into the fold. The story moves toward the huddle ending.",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-scene_03_t1_huddle.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 20,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "ending_huddle",
+      "choices": [],
+      "nextSceneId": "ending_huddle"
+    },
+    {
+      "sceneId": "scene_03_t2_watch",
+      "displayText": "You linger and watch. When the moment is spent, you return toward the beginning.",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-scene_03_t2_watch.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 20,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "return_title_watch",
+      "choices": [],
+      "nextSceneId": "return_title_watch"
+    },
+    {
+      "sceneId": "scene_03_t2_inside",
+      "displayText": "Inside, you can still choose: peek outside or join the huddle.",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-scene_03_t2_inside.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 25,
+      "choicesRevealSecondsBeforeEnd": 8,
+      "onTimeout": "scene_00_title",
+      "choices": [
+        {
+          "id": "t2_peek_out",
+          "label": "Peek outside",
+          "targetSceneId": "ending_peek"
+        },
+        {
+          "id": "t2_join_huddle",
+          "label": "Join the huddle",
+          "targetSceneId": "ending_huddle"
+        }
+      ]
+    },
+    {
+      "sceneId": "ending_peek",
+      "displayText": "[PEEK END] — hold, then the return clip plays.",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-ending_peek.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 25,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "return_title_from_end",
+      "choices": [],
+      "nextSceneId": "return_title_from_end"
+    },
+    {
+      "sceneId": "ending_huddle",
+      "displayText": "[HUDDLE END] — hold, then the return clip plays.",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-ending_huddle.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 25,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "return_title_from_end",
+      "choices": [],
+      "nextSceneId": "return_title_from_end"
+    },
+    {
+      "sceneId": "return_title_watch",
+      "displayText": "The watch branch resolves — returning to the opening.",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-return_title_watch.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 18,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "scene_00_title",
+      "choices": [],
+      "nextSceneId": "scene_00_title"
+    },
+    {
+      "sceneId": "return_title_from_end",
+      "displayText": "Return from the endings (~60s in production); then back to the start.",
+      "narrationAudio": "",
+      "backgroundVideo": "/video/absolution/absolution-return_title_from_end.mp4",
+      "ambientSfx": "",
+      "soundtrack": "",
+      "timeoutSeconds": 60,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "scene_00_title",
+      "choices": [],
+      "nextSceneId": "scene_00_title"
     }
   ]
 }

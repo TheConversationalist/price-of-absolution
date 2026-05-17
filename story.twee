@@ -1,14 +1,43 @@
-:: intro
-You wake in a whiteout. Which route will keep you alive?
-[[Climb the ridge->ridge]]
-[[Descend into the valley->valley]]
+:: scene_00_title
+[[Start Reading->scene_01_opening]]
 
-:: ridge
-The ridge is exposed, but you can see a distant flare.
-[[Signal the flare->intro]]
-[[Hide behind ice formations->valley]]
+:: scene_01_opening
+The evening is settling. What do you do next?
+[[Go inside for dinner->scene_02_track2]]
+[[Finish weaving the hammock->scene_02_track1]]
 
-:: valley
-The valley is quieter but the cold is sharper.
-[[Follow animal tracks->ridge]]
-[[Wait and conserve heat->intro]]
+:: scene_02_track1
+You stay with the weave; voices drift from the house. How do you respond?
+[[Peek out the window->scene_03_t1_peek]]
+[[Join the huddle->scene_03_t1_huddle]]
+
+:: scene_02_track2
+You head in for dinner, but something outside still pulls at you.
+[[Watch them pass by->scene_03_t2_watch]]
+[[Go inside->scene_03_t2_inside]]
+
+:: scene_03_t1_peek
+The glass frames a small, decisive moment. The story leans toward the peek ending.
+
+:: scene_03_t1_huddle
+You step toward the circle of voices. The story leans toward the huddle ending.
+
+:: scene_03_t2_watch
+You stay to watch — long enough that the right move is to step back and begin again.
+
+:: scene_03_t2_inside
+Inside, the house exhales. You can still change what you witness next.
+[[Peek outside->ending_peek]]
+[[Join the huddle->ending_huddle]]
+
+:: ending_peek
+The peek ending — a held breath, then release.
+
+:: ending_huddle
+The huddle ending — warmth and weight together.
+
+:: return_title_watch
+The loop back from watching — a breath before the opening returns.
+
+:: return_title_from_end
+Return from the endings — one minute in the story, then back to the start.

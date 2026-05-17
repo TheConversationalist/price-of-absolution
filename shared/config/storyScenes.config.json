@@ -1,0 +1,125 @@
+{
+  "_docs": "Per-scene media, timers, and stable choice IDs. Passages: ../../story.twee. Rebuild: npm run story:import",
+  "title": "The Price of Absolution",
+  "startSceneId": "scene_00_title",
+  "defaults": {
+    "narrationAudio": "",
+    "ambientSfx": "",
+    "soundtrack": "",
+    "timeoutSeconds": 25,
+    "choicesRevealSecondsBeforeEnd": 10,
+    "onTimeout": "scene_00_title"
+  },
+  "scenes": {
+    "scene_00_title": {
+      "displayText": "Begin when you are ready.",
+      "backgroundVideo": "/video/absolution/absolution-scene_01_opening.mp4",
+      "holdFirstFrame": true,
+      "hideTabletTimer": true,
+      "timeoutSeconds": 3600,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "scene_00_title",
+      "choiceIds": ["poa_start_reading"],
+      "choiceLabels": ["Start Reading"]
+    },
+    "scene_01_opening": {
+      "displayText": "The evening is settling. Go inside for dinner, or stay to finish weaving the hammock?",
+      "backgroundVideo": "/video/absolution/absolution-scene_01_opening.mp4",
+      "timeoutSeconds": 30,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "scene_00_title",
+      "choiceIds": ["poa_dinner", "poa_hammock"],
+      "choiceLabels": ["Go inside for dinner", "Finish weaving the hammock"]
+    },
+    "scene_02_track1": {
+      "displayText": "You stay with the hammock. Do you peek out the window or join the huddle?",
+      "backgroundVideo": "/video/absolution/absolution-scene_02_track1.mp4",
+      "timeoutSeconds": 25,
+      "choicesRevealSecondsBeforeEnd": 8,
+      "onTimeout": "scene_00_title",
+      "choiceIds": ["track1_peek", "track1_huddle"],
+      "choiceLabels": ["Peek out the window", "Join the huddle"]
+    },
+    "scene_02_track2": {
+      "displayText": "You went in for dinner, but the outside world still moves. Watch them pass or stay inside?",
+      "backgroundVideo": "/video/absolution/absolution-scene_02_track2.mp4",
+      "timeoutSeconds": 25,
+      "choicesRevealSecondsBeforeEnd": 8,
+      "onTimeout": "scene_00_title",
+      "choiceIds": ["track2_watch", "track2_inside"],
+      "choiceLabels": ["Watch them pass by", "Go inside"]
+    },
+    "scene_03_t1_peek": {
+      "displayText": "A quiet hinge turns. The story moves toward the peek ending.",
+      "backgroundVideo": "/video/absolution/absolution-scene_03_t1_peek.mp4",
+      "timeoutSeconds": 20,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "ending_peek",
+      "nextSceneId": "ending_peek",
+      "choices": []
+    },
+    "scene_03_t1_huddle": {
+      "displayText": "You step into the fold. The story moves toward the huddle ending.",
+      "backgroundVideo": "/video/absolution/absolution-scene_03_t1_huddle.mp4",
+      "timeoutSeconds": 20,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "ending_huddle",
+      "nextSceneId": "ending_huddle",
+      "choices": []
+    },
+    "scene_03_t2_watch": {
+      "displayText": "You linger and watch. When the moment is spent, you return toward the beginning.",
+      "backgroundVideo": "/video/absolution/absolution-scene_03_t2_watch.mp4",
+      "timeoutSeconds": 20,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "return_title_watch",
+      "nextSceneId": "return_title_watch",
+      "choices": []
+    },
+    "scene_03_t2_inside": {
+      "displayText": "Inside, you can still choose: peek outside or join the huddle.",
+      "backgroundVideo": "/video/absolution/absolution-scene_03_t2_inside.mp4",
+      "timeoutSeconds": 25,
+      "choicesRevealSecondsBeforeEnd": 8,
+      "onTimeout": "scene_00_title",
+      "choiceIds": ["t2_peek_out", "t2_join_huddle"],
+      "choiceLabels": ["Peek outside", "Join the huddle"]
+    },
+    "ending_peek": {
+      "displayText": "[PEEK END] — hold, then the return clip plays.",
+      "backgroundVideo": "/video/absolution/absolution-ending_peek.mp4",
+      "timeoutSeconds": 25,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "return_title_from_end",
+      "nextSceneId": "return_title_from_end",
+      "choices": []
+    },
+    "ending_huddle": {
+      "displayText": "[HUDDLE END] — hold, then the return clip plays.",
+      "backgroundVideo": "/video/absolution/absolution-ending_huddle.mp4",
+      "timeoutSeconds": 25,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "return_title_from_end",
+      "nextSceneId": "return_title_from_end",
+      "choices": []
+    },
+    "return_title_watch": {
+      "displayText": "The watch branch resolves — returning to the opening.",
+      "backgroundVideo": "/video/absolution/absolution-return_title_watch.mp4",
+      "timeoutSeconds": 18,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "scene_00_title",
+      "nextSceneId": "scene_00_title",
+      "choices": []
+    },
+    "return_title_from_end": {
+      "displayText": "Return from the endings (~60s in production); then back to the start.",
+      "backgroundVideo": "/video/absolution/absolution-return_title_from_end.mp4",
+      "timeoutSeconds": 60,
+      "choicesRevealSecondsBeforeEnd": 10,
+      "onTimeout": "scene_00_title",
+      "nextSceneId": "scene_00_title",
+      "choices": []
+    }
+  }
+}

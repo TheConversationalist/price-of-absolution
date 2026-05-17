@@ -1,11 +1,21 @@
 {
   "defaultTimeoutSeconds": 20,
-  "storyStartSceneId": "intro",
+  "defaultChoicesRevealSecondsBeforeEnd": 10,
+  "storyStartSceneId": "scene_00_title",
+  "playback": {
+    "loopBackgroundVideo": false,
+    "syncTabletTimerToVideo": true
+  },
   "audio": {
+    "videoVolume": 0.85,
     "narrationVolume": 1,
     "ambientVolume": 0.7,
     "soundtrackVolume": 0.6,
-    "fadeDurationMs": 800
+    "fadeDurationMs": 800,
+    "bedLoops": {
+      "wind": { "path": "/wind-sfx.wav", "volume": 0.18 },
+      "music": { "path": "/dramatic-music.wav", "volume": 0.14 }
+    }
   },
   "network": {
     "serverUrl": "ws://localhost:8787"

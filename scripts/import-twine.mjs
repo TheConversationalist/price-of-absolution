@@ -9,9 +9,32 @@ const repoRoot = path.join(__dirname, '..');
 
 const twinePath = process.argv[2] || path.join(repoRoot, 'story.twee');
 const outputPath = process.argv[3] || path.join(repoRoot, 'shared/story/story.generated.json');
+const sceneConfigPath = path.join(repoRoot, 'shared/config/storyScenes.config.json');
 
 const rawTwine = await fs.readFile(twinePath, 'utf8');
-const story = importTwineToStory(rawTwine);
+
+let sceneConfig = null;
+try {
+  const raw = await fs.readFile(sceneConfigPath, 'utf8');
+  sceneConfig = JSON.parse(raw);
+  console.log(`Loaded scene config: ${sceneConfigPath}`);
+} catch (err) {
+  if (err.code === 'ENOENT') {
+    console.warn(`No ${sceneConfigPath} — using Twine text + runtime.json defaults only.`);
+  } else {
+    throw err;
+  }
+}
+
+const story = importTwineToStory(rawTwine, { sceneConfig });
+
+const sceneIds = new Set(story.scenes.map((s) => s.sceneId));
+for (const id of Object.keys(sceneConfig?.scenes ?? {})) {
+  if (!sceneIds.has(id)) {
+    console.warn(`storyScenes.config.json: scene "${id}" has no matching Twee passage — ignored after merge.`);
+  }
+}
+
 const validation = validateStory(story);
 
 if (!validation.valid) {

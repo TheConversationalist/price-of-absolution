@@ -1,5 +1,22 @@
 node_modules
 dist
-.storybook
+.DS_Store
 *.log
 shared/story/story.generated.json
+
+# Video (any directory)
+*.mp4
+*.webm
+*.mov
+*.m4v
+*.avi
+*.mkv
+*.ogv
+assets/video/
+
+# Book runtime media
+book-projection/public/*.wav
+book-projection/public/video/
+
+# Too large for GitHub; add locally if needed (see README)
+assets/wind-sfx.wav

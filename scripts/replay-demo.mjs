@@ -4,12 +4,11 @@ const url = process.env.SYNC_URL || 'ws://localhost:8787';
 const client = new WebSocket(url);
 
 const steps = [
-  { delayMs: 1000, type: 'chooseOption', payload: { choiceId: 'route_ridge', sceneId: 'intro' } },
-  { delayMs: 2500, type: 'diceRollStart', payload: { sceneId: 'ridge' } },
-  { delayMs: 4500, type: 'diceRollResult', payload: { sceneId: 'ridge', value: 14 } },
-  { delayMs: 7000, type: 'chooseOption', payload: { choiceId: 'ridge_hide', sceneId: 'ridge' } },
-  { delayMs: 9500, type: 'timeoutExpired', payload: { sceneId: 'valley' } },
-  { delayMs: 10200, type: 'resetStory', payload: { reason: 'demo-walkthrough' } }
+  { delayMs: 500, type: 'chooseOption', payload: { choiceId: 'poa_start_reading', sceneId: 'scene_00_title' } },
+  { delayMs: 1200, type: 'chooseOption', payload: { choiceId: 'poa_hammock', sceneId: 'scene_01_opening' } },
+  { delayMs: 3500, type: 'chooseOption', payload: { choiceId: 'track1_peek', sceneId: 'scene_02_track1' } },
+  { delayMs: 7000, type: 'timeoutExpired', payload: { sceneId: 'scene_03_t1_peek' } },
+  { delayMs: 7800, type: 'resetStory', payload: { reason: 'demo-walkthrough' } }
 ];
 
 client.on('open', () => {
@@ -25,7 +24,7 @@ client.on('open', () => {
   setTimeout(() => {
     console.log('[demo] complete');
     client.close();
-  }, 12000);
+  }, 9500);
 });
 
 client.on('error', (error) => {

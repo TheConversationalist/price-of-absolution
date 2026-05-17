@@ -25,11 +25,26 @@
           "ambientSfx": { "type": "string" },
           "soundtrack": { "type": "string" },
           "timeoutSeconds": { "type": "number", "minimum": 1 },
+          "choicesRevealSecondsBeforeEnd": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Show branch choices only when this many seconds or fewer remain in the scene (see timeoutSeconds)."
+          },
           "onTimeout": { "type": "string" },
+          "holdFirstFrame": {
+            "type": "boolean",
+            "description": "Book: show frame 0 of backgroundVideo and do not play until the next scene load."
+          },
+          "hideTabletTimer": {
+            "type": "boolean",
+            "description": "Tablet: no countdown bar; branch choices available immediately."
+          },
+          "nextSceneId": {
+            "type": "string",
+            "description": "When choices is empty, the book advances here after the clip ends (or as the primary linear edge)."
+          },
           "choices": {
             "type": "array",
-            "minItems": 2,
-            "maxItems": 2,
             "items": {
               "type": "object",
               "required": ["id", "label", "targetSceneId"],

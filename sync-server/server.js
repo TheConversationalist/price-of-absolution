@@ -4,7 +4,7 @@ const PORT = Number(process.env.PORT || 8787);
 const wss = new WebSocketServer({ port: PORT });
 
 let latestSceneState = {
-  sceneId: 'intro',
+  sceneId: 'scene_00_title',
   updatedAt: Date.now()
 };
 

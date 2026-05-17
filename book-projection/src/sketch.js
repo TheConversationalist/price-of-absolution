@@ -1,14 +1,15 @@
 import p5 from 'p5';
 import story from '@shared/story/story.json' assert { type: 'json' };
 import runtime from '@shared/config/runtime.json' assert { type: 'json' };
+import { getSyncServerUrl } from '@shared/network/syncServerUrl.js';
 import { StoryStateMachine } from './stateMachine.js';
 import { MediaEngine } from './mediaEngine.js';
 import { NetworkClient } from './networkClient.js';
+import { ProjectionView } from './projectionView.js';
 
 const stateMachine = new StoryStateMachine(story);
 
 new p5((p) => {
-  const media = new MediaEngine(p);
   const logLines = [];
 
   function pushLog(message) {
@@ -20,20 +21,95 @@ new p5((p) => {
     console.log(`[book] ${message}`);
   }
 
+  const projectionView = new ProjectionView({
+    runtimeConfig: runtime,
+    onMappingModeChange: (on) =>
+      pushLog(
+        on
+          ? 'Projection mapping ON — drag orange squares; M off · [ ] grid · R reset corners'
+          : 'Projection mapping off (press M)'
+      )
+  });
+
+  let debugMode = false;
+
+  window.addEventListener('keydown', (e) => {
+    if (e.repeat) {
+      return;
+    }
+    if (e.key !== 'd' && e.key !== 'D') {
+      return;
+    }
+    debugMode = !debugMode;
+    if (debugMode) {
+      pushLog('Debug on — D off · M projection map · [ ] grid · R corners · click/key sound');
+    }
+    console.log(`[book] Debug ${debugMode ? 'on' : 'off'}`);
+  });
+
+  const media = new MediaEngine(p, projectionView);
+
+  /** Avoid restarting the same background clip when branching timeout targets the current scene. */
+  let lastAppliedMediaKey = null;
+
   function applyScene(scene, source = 'local') {
     if (!scene) {
       return;
     }
 
-    media.applyScene(scene, runtime);
+    const mediaKey = `${scene.sceneId}|${scene.backgroundVideo ?? ''}`;
+    if (
+      mediaKey === lastAppliedMediaKey &&
+      (source === 'video-ended' || source === 'timeoutExpired')
+    ) {
+      return;
+    }
+    lastAppliedMediaKey = mediaKey;
+
     network.send('sceneChanged', {
       sceneId: scene.sceneId,
-      source
+      source,
+      clipDurationSeconds: null
     });
+
+    const syncClip =
+      runtime.playback?.syncTabletTimerToVideo !== false && Boolean(scene.backgroundVideo);
+
+    media.applyScene(scene, runtime, {
+      onClipDurationSeconds: (sec) => {
+        if (!syncClip) {
+          return;
+        }
+        if (scene.hideTabletTimer === true) {
+          return;
+        }
+        if (!Number.isFinite(sec) || sec <= 0) {
+          return;
+        }
+        network.send('sceneChanged', {
+          sceneId: scene.sceneId,
+          source,
+          clipDurationSeconds: sec
+        });
+      },
+      onVideoEnded: () => {
+        if (!scene.backgroundVideo) {
+          return;
+        }
+        if (stateMachine.getCurrentScene()?.sceneId !== scene.sceneId) {
+          return;
+        }
+        const next = stateMachine.advanceAfterClip();
+        if (next) {
+          applyScene(next, 'video-ended');
+        }
+      }
+    });
+
     pushLog(`Scene changed to ${scene.sceneId} from ${source}`);
   }
 
-  const network = new NetworkClient(runtime.network.serverUrl, {
+  const network = new NetworkClient(getSyncServerUrl(runtime.network.serverUrl), {
     onOpen: () => pushLog('Connected to sync server'),
     onClose: () => pushLog('Disconnected from sync server; reconnecting'),
     onEvent: (event) => {
@@ -42,7 +118,42 @@ new p5((p) => {
         applyScene(scene, 'tablet-choice');
       }
 
-      if (event.type === 'timeoutExpired' || event.type === 'resetStory') {
+      if (event.type === 'debugSkipToPreReveal') {
+        const expectedId = event.payload?.sceneId;
+        const secondsLeft = event.payload?.secondsLeft;
+        if (
+          !expectedId ||
+          typeof secondsLeft !== 'number' ||
+          stateMachine.getCurrentScene()?.sceneId !== expectedId
+        ) {
+          return;
+        }
+        const sc = stateMachine.getCurrentScene();
+        if (!sc?.backgroundVideo || !sc.choices?.length) {
+          return;
+        }
+        if (projectionView.seekVideoToTimeLeft(secondsLeft, { allowRewind: false })) {
+          pushLog(`Debug skip: video → ~${secondsLeft}s remaining`);
+        } else {
+          pushLog(`Debug skip: seek queued (metadata loading) → ~${secondsLeft}s`);
+        }
+        return;
+      }
+
+      if (event.type === 'timeoutExpired') {
+        const expectedId = event.payload?.sceneId;
+        if (expectedId && stateMachine.getCurrentScene()?.sceneId !== expectedId) {
+          return;
+        }
+        const scene = stateMachine.timeout();
+        if (scene) {
+          applyScene(scene, 'timeoutExpired');
+        }
+        return;
+      }
+
+      if (event.type === 'resetStory') {
+        lastAppliedMediaKey = null;
         const scene = stateMachine.reset();
         applyScene(scene, event.type);
       }
@@ -60,16 +171,38 @@ new p5((p) => {
     onError: (message) => pushLog(message)
   });
 
+  function styleHudCanvas() {
+    const elt = p.canvas;
+    if (!elt) {
+      return;
+    }
+    elt.style.position = 'fixed';
+    elt.style.left = '0';
+    elt.style.top = '0';
+    elt.style.zIndex = '1';
+    elt.style.pointerEvents = 'none';
+  }
+
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
+    styleHudCanvas();
     p.textFont('Georgia');
     p.textWrap(p.WORD);
+
+    projectionView.setRuntimeConfig(runtime);
+    projectionView.mount(document.body);
+
     applyScene(stateMachine.getCurrentScene(), 'startup');
     network.connect();
   };
 
   p.draw = () => {
-    media.drawBackground();
+    projectionView.render();
+    p.clear();
+
+    if (!debugMode) {
+      return;
+    }
 
     const scene = stateMachine.getCurrentScene();
     p.fill(0, 0, 0, 130);
@@ -94,5 +227,6 @@ new p5((p) => {
 
   p.windowResized = () => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
+    styleHudCanvas();
   };
 });
