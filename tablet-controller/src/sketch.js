@@ -1,3 +1,4 @@
+import './tabletFullscreen.js';
 import p5 from 'p5';
 import story from '@shared/story/story.json' assert { type: 'json' };
 import runtime from '@shared/config/runtime.json' assert { type: 'json' };

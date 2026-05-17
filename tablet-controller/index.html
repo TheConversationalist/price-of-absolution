@@ -1,15 +1,102 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#ebeef4" />
     <title>Tablet Controller</title>
     <style>
-      body { margin: 0; overflow: hidden; background: #ebeef4; }
-      #app { width: 100vw; height: 100vh; }
+      html,
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #ebeef4;
+      }
+      #app {
+        width: 100vw;
+        height: 100vh;
+      }
+      #app canvas {
+        display: block;
+        position: relative;
+        z-index: 1;
+      }
+
+      /** Invisible top-right: five quick taps toggle fullscreen (tabletFullscreen.js). */
+      .tablet-fs-hitzone {
+        position: fixed;
+        top: env(safe-area-inset-top, 0px);
+        right: env(safe-area-inset-right, 0px);
+        width: min(120px, 26vw);
+        height: min(110px, 20vh);
+        z-index: 50;
+        pointer-events: auto;
+        touch-action: manipulation;
+        box-sizing: border-box;
+        opacity: 0;
+        overflow: hidden;
+        background: transparent;
+        border: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .tablet-fs-feedback {
+        position: fixed;
+        top: calc(env(safe-area-inset-top, 0px) + min(118px, 21vh) + 8px);
+        right: max(10px, env(safe-area-inset-right, 0px));
+        max-width: min(300px, 88vw);
+        z-index: 55;
+        margin: 0;
+        padding: 10px 14px;
+        font-size: clamp(13px, 3.3vw, 15px);
+        line-height: 1.35;
+        color: rgba(15, 26, 42, 0.96);
+        text-align: right;
+        background: rgba(255, 255, 255, 0.94);
+        border: 1px solid rgba(30, 58, 90, 0.28);
+        border-radius: 12px;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+      }
+
+      .tablet-fs-feedback.is-visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /**
+       * When requestFullscreen is unavailable or no-ops (common on iPad WebKit),
+       * approximate edge-to-edge layout. Android Chrome typically uses native fullscreen instead.
+       */
+      body.tablet-faux-fullscreen {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        max-width: 100vw;
+        height: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow: hidden;
+        overscroll-behavior: none;
+        touch-action: manipulation;
+      }
     </style>
   </head>
   <body>
+    <div
+      id="tablet-fs-zone"
+      class="tablet-fs-hitzone"
+      aria-label="Fullscreen: tap five times quickly in top-right corner"
+    ></div>
+    <p id="tablet-fs-feedback" class="tablet-fs-feedback" role="status"></p>
     <div id="app"></div>
     <script type="module" src="/src/sketch.js"></script>
   </body>
