@@ -13,9 +13,18 @@
     "soundtrackVolume": 0.6,
     "fadeDurationMs": 800,
     "bedLoops": {
-      "wind": { "path": "/wind-sfx.wav", "volume": 0.18 },
-      "music": { "path": "/dramatic-music.wav", "volume": 0.14 }
-    }
+      "wind": {
+        "path": "/wind-sfx.wav",
+        "volume": 0.09,
+        "crossfadeSeconds": 1.25
+      },
+      "music": {
+        "path": "/dramatic-music.wav",
+        "volume": 0.28,
+        "crossfadeSeconds": 1.25
+      }
+    },
+    "dramaticMusicDelayMs": 10000
   },
   "network": {
     "serverUrl": "ws://localhost:8787"

@@ -56,4 +56,14 @@ export class MediaEngine {
 
     this[channel] = audio;
   }
+
+  /** Retry p5 scene clips after autoplay was blocked (call from a user-gesture handler). */
+  resumeFromUserGesture() {
+    for (const ch of ['narration', 'ambient', 'soundtrack']) {
+      const el = this[ch];
+      if (el && typeof el.play === 'function') {
+        el.play().catch(() => {});
+      }
+    }
+  }
 }

@@ -150,15 +150,18 @@ function debugSkipToPreReveal() {
   pushLog(`Debug skip: ~${target}s left (${reveal}s reveal + ${lead})`);
 }
 
+/** Scale for all controller typography and touch targets. */
+const UI_SCALE = 2;
+
 /** Layout for branch buttons: two columns when there are exactly 2 choices. */
-const CHOICE_PAD = 22;
-const CHOICE_GAP = 32;
-const CHOICE_MARGIN = 40;
-const CHOICE_CORNER = 16;
-const CHOICE_TEXT = 34;
-const CHOICE_MIN_H = 128;
-const CHOICE_ROW_GAP = 28;
-const CHOICES_TOP = 328;
+const CHOICE_PAD = 22 * UI_SCALE;
+const CHOICE_GAP = 32 * UI_SCALE;
+const CHOICE_MARGIN = 40 * UI_SCALE;
+const CHOICE_CORNER = 16 * UI_SCALE;
+const CHOICE_TEXT = 34 * UI_SCALE;
+const CHOICE_MIN_H = 128 * UI_SCALE;
+const CHOICE_ROW_GAP = 28 * UI_SCALE;
+const CHOICES_TOP = 328 * UI_SCALE;
 
 function wrapLabelLines(p5, label, maxW) {
   const words = String(label)
@@ -212,7 +215,7 @@ function drawOutlinedChoiceCell(p5, x, y, w, h, lines, rgbStroke, rgbFill, corne
 
   p5.noFill();
   p5.stroke(strokeRgb[0], strokeRgb[1], strokeRgb[2]);
-  p5.strokeWeight(pressed ? 3.1 : 2.75);
+  p5.strokeWeight((pressed ? 3.1 : 2.75) * UI_SCALE);
   p5.rect(x, y, w, h, corner);
   p5.noStroke();
   const blockH = lines.length * lineLead;
@@ -235,8 +238,8 @@ function isPointerDownOnButton(p5, rx, ry, rw, rh) {
   return Boolean(p5.mouseIsPressed && pointInRect(p5, rx, ry, rw, rh));
 }
 
-const TIMER_BAR_GAP = 28;
-const TIMER_BAR_STROKE = 6;
+const TIMER_BAR_GAP = 28 * UI_SCALE;
+const TIMER_BAR_STROKE = 6 * UI_SCALE;
 const TIMER_BAR_MARGIN = CHOICE_MARGIN;
 
 function measureChoiceBlockHeight(p5, scene) {
@@ -273,7 +276,7 @@ function drawSymmetricalTimerBar(p5, y, fractionRemaining) {
   const cx = p5.width / 2;
   const trackHalf = (p5.width - 2 * TIMER_BAR_MARGIN) / 2;
   const halfLen = trackHalf * Math.min(1, Math.max(0, fractionRemaining));
-  if (halfLen < 0.5) {
+  if (halfLen < UI_SCALE * 0.5) {
     return;
   }
   p5.push();
@@ -434,7 +437,7 @@ new p5((p) => {
     p.scale(scale);
     p.translate(-cx, -cy);
     p.stroke(28, 72, 118, alphaStroke);
-    p.strokeWeight(2.9 * fade);
+    p.strokeWeight(2.9 * UI_SCALE * fade);
     p.fill(210, 232, 255, alphaFill);
     p.rect(x, y, w, h, corner);
     p.pop();
@@ -502,9 +505,9 @@ new p5((p) => {
       buttonAreas = [];
       const barReserve = scene.hideTabletTimer
         ? 0
-        : TIMER_BAR_GAP + TIMER_BAR_STROKE + 8;
+        : TIMER_BAR_GAP + TIMER_BAR_STROKE + 8 * UI_SCALE;
       const blockH = measureChoiceBlockHeight(p, scene);
-      const topY = Math.max(24, (p.height - blockH - barReserve) / 2);
+      const topY = Math.max(24 * UI_SCALE, (p.height - blockH - barReserve) / 2);
       const layout = drawInteractiveChoices(p, scene, topY);
       buttonAreas = layout.areas;
       if (!scene.hideTabletTimer) {
@@ -520,16 +523,16 @@ new p5((p) => {
 
     if (debugMode) {
       p.fill(94, 70, 12);
-      p.textSize(17);
+      p.textSize(17 * UI_SCALE);
       p.textAlign(p.RIGHT, p.TOP);
-      p.text('[DEBUG · D hides]', p.width - 40, 16);
+      p.text('[DEBUG · D hides]', p.width - 40 * UI_SCALE, 16 * UI_SCALE);
       p.textAlign(p.LEFT, p.BASELINE);
 
       if (hasChoices && secondsLeft > reveal + 10 && !scene.hideTabletTimer) {
-        const bx = p.width - 268;
-        const by = 44;
-        const bw = 236;
-        const bh = 40;
+        const bx = p.width - 268 * UI_SCALE;
+        const by = 44 * UI_SCALE;
+        const bw = 236 * UI_SCALE;
+        const bh = 40 * UI_SCALE;
         const dbgPressed = isPointerDownOnButton(p, bx, by, bw, bh);
         p.push();
         if (dbgPressed) {
@@ -541,13 +544,13 @@ new p5((p) => {
         }
         p.noFill();
         p.stroke(94, 70, 12, dbgPressed ? 255 : 230);
-        p.strokeWeight(dbgPressed ? 2.6 : 2);
-        p.rect(bx, by, bw, bh, 8);
+        p.strokeWeight((dbgPressed ? 2.6 : 2) * UI_SCALE);
+        p.rect(bx, by, bw, bh, 8 * UI_SCALE);
         p.noStroke();
         p.fill(dbgPressed ? 48 : 62, dbgPressed ? 36 : 48, dbgPressed ? 6 : 8);
-        p.textSize(15);
+        p.textSize(15 * UI_SCALE);
         p.textAlign(p.LEFT, p.CENTER);
-        p.text(`Skip → ${reveal + 10}s left (10s pre-reveal)`, bx + 14, by + bh / 2 + 1);
+        p.text(`Skip → ${reveal + 10}s left (10s pre-reveal)`, bx + 14 * UI_SCALE, by + bh / 2 + 1 * UI_SCALE);
         p.textAlign(p.LEFT, p.BASELINE);
         p.pop();
         debugSkipPreRevealBtn = { x: bx, y: by, w: bw, h: bh };
@@ -555,15 +558,15 @@ new p5((p) => {
     }
 
     p.fill(20, 24, 32);
-    p.textSize(30);
-    p.text('The Price of Absolution — controller', 40, 56);
+    p.textSize(30 * UI_SCALE);
+    p.text('The Price of Absolution — controller', 40 * UI_SCALE, 56 * UI_SCALE);
 
     p.fill(30, 58, 90);
-    p.textSize(21);
-    p.text(`Scene: ${scene.sceneId}`, 40, 96);
+    p.textSize(21 * UI_SCALE);
+    p.text(`Scene: ${scene.sceneId}`, 40 * UI_SCALE, 96 * UI_SCALE);
 
     if (debugMode) {
-      p.textSize(16);
+      p.textSize(16 * UI_SCALE);
       p.fill(55, 75, 98);
       const clip =
         typeof lastClipDurationSeconds === 'number' && lastClipDurationSeconds > 0
@@ -571,58 +574,68 @@ new p5((p) => {
           : '—';
       p.text(
         `Choices: ${hasChoices ? scene.choices.length : 0} · visible: ${visible} · clip: ${clip}`,
-        40,
-        122,
-        p.width - 80,
-        48
+        40 * UI_SCALE,
+        122 * UI_SCALE,
+        p.width - 80 * UI_SCALE,
+        48 * UI_SCALE
       );
     }
 
     p.fill(22, 26, 34);
-    p.textSize(24);
-    p.text(scene.displayText, 40, debugMode ? 156 : 140, p.width - 80, 120);
+    p.textSize(24 * UI_SCALE);
+    p.text(
+      scene.displayText,
+      40 * UI_SCALE,
+      debugMode ? 156 * UI_SCALE : 140 * UI_SCALE,
+      p.width - 80 * UI_SCALE,
+      120 * UI_SCALE
+    );
 
     p.fill(secondsLeft <= 5 ? '#9b1c1c' : '#0a4d6e');
-    p.textSize(46);
-    p.text(`Time Left: ${secondsLeft}s`, 40, 300);
+    p.textSize(46 * UI_SCALE);
+    p.text(`Time Left: ${secondsLeft}s`, 40 * UI_SCALE, 300 * UI_SCALE);
 
     if (debugMode && !hasChoices) {
       p.fill(55, 65, 80);
-      p.textSize(20);
-      p.text('Linear beat — no choices; book advances after this clip / timeout.', 40, 352);
+      p.textSize(20 * UI_SCALE);
+      p.text(
+        'Linear beat — no choices; book advances after this clip / timeout.',
+        40 * UI_SCALE,
+        352 * UI_SCALE
+      );
     }
 
     if (debugMode && hasChoices && !visible) {
       const until = Math.max(0, secondsLeft - reveal);
       p.fill(55, 65, 80);
-      p.textSize(20);
+      p.textSize(20 * UI_SCALE);
       p.text(
         `Choices locked — unlock in ~${until}s (last ${reveal}s of beat)`,
-        40,
-        352,
-        p.width - 80,
-        52
+        40 * UI_SCALE,
+        352 * UI_SCALE,
+        p.width - 80 * UI_SCALE,
+        52 * UI_SCALE
       );
     }
 
-    let choicesBlockEnd = 400;
+    let choicesBlockEnd = 400 * UI_SCALE;
     buttonAreas = [];
     if (hasChoices && visible) {
       const layout = drawInteractiveChoices(p, scene, CHOICES_TOP);
       buttonAreas = layout.areas;
-      choicesBlockEnd = layout.bottom + 24;
+      choicesBlockEnd = layout.bottom + 24 * UI_SCALE;
     } else if (debugMode && hasChoices && !visible) {
       const bottom = drawLockedChoicePreview(p, scene, CHOICES_TOP);
-      choicesBlockEnd = bottom + 24;
+      choicesBlockEnd = bottom + 24 * UI_SCALE;
     }
 
     p.fill(255, 255, 255, 200);
-    const logTop = Math.min(p.height - 230, choicesBlockEnd);
-    p.rect(32, logTop, p.width - 64, 190, 8);
+    const logTop = Math.min(p.height - 230 * UI_SCALE, choicesBlockEnd);
+    p.rect(32 * UI_SCALE, logTop, p.width - 64 * UI_SCALE, 190 * UI_SCALE, 8 * UI_SCALE);
     p.fill(30, 41, 59);
-    p.textSize(16);
+    p.textSize(16 * UI_SCALE);
     logLines.forEach((line, index) => {
-      p.text(line, 48, logTop + 34 + index * 20);
+      p.text(line, 48 * UI_SCALE, logTop + 34 * UI_SCALE + index * 20 * UI_SCALE);
     });
 
     drawPressBurstLayer();
@@ -634,7 +647,7 @@ new p5((p) => {
       const withinX = p.mouseX >= b.x && p.mouseX <= b.x + b.w;
       const withinY = p.mouseY >= b.y && p.mouseY <= b.y + b.h;
       if (withinX && withinY) {
-        triggerPressBurst(b.x, b.y, b.w, b.h, 8);
+        triggerPressBurst(b.x, b.y, b.w, b.h, 8 * UI_SCALE);
         debugSkipToPreReveal();
         return;
       }

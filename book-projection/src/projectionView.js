@@ -184,6 +184,8 @@ export class ProjectionView {
     this._onResize = this._onResize.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
     this._unlockVideoAudio = this._unlockVideoAudio.bind(this);
+    /** Public alias for sketch / kiosk: unmutes background video after a user gesture. */
+    this.unlockAudio = this._unlockVideoAudio;
 
     this.onMappingModeChange = options.onMappingModeChange ?? null;
   }
@@ -241,10 +243,6 @@ export class ProjectionView {
     canvas.addEventListener('pointercancel', this._onPointerUp);
     window.addEventListener('resize', this._onResize);
     window.addEventListener('keydown', this._onKeyDown);
-
-    for (const evt of ['pointerdown', 'keydown']) {
-      document.body.addEventListener(evt, this._unlockVideoAudio, { once: true });
-    }
   }
 
   _unlockVideoAudio() {

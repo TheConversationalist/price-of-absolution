@@ -6,6 +6,11 @@ import { StoryStateMachine } from './stateMachine.js';
 import { MediaEngine } from './mediaEngine.js';
 import { NetworkClient } from './networkClient.js';
 import { ProjectionView } from './projectionView.js';
+import { createDramaticLoopBed } from './dramaticBed.js';
+import { startWindBed } from './windBed.js';
+
+const OPENING_SCENE_ID = 'scene_01_opening';
+const TITLE_SCENE_ID = 'scene_00_title';
 
 const stateMachine = new StoryStateMachine(story);
 
@@ -48,6 +53,90 @@ new p5((p) => {
   });
 
   const media = new MediaEngine(p, projectionView);
+
+  let windBed = null;
+  function ensureWindBed() {
+    const w = runtime.audio?.bedLoops?.wind;
+    if (!w?.path || windBed) {
+      return;
+    }
+    windBed = startWindBed({
+      url: w.path,
+      peakVolume: typeof w.volume === 'number' ? w.volume : 0.09,
+      crossfadeSeconds: typeof w.crossfadeSeconds === 'number' ? w.crossfadeSeconds : undefined
+    });
+  }
+
+  let dramaticBed = null;
+  let dramaticStartTimer = null;
+
+  function getDramaticMusicConfig() {
+    return runtime.audio?.bedLoops?.music;
+  }
+
+  function ensureDramaticBedController() {
+    const m = getDramaticMusicConfig();
+    if (!m?.path) {
+      return null;
+    }
+    if (!dramaticBed) {
+      dramaticBed = createDramaticLoopBed({
+        url: m.path,
+        volume: typeof m.volume === 'number' ? m.volume : 0.28,
+        crossfadeSeconds: typeof m.crossfadeSeconds === 'number' ? m.crossfadeSeconds : undefined,
+        startFadeInMs: typeof runtime.audio?.fadeDurationMs === 'number' ? runtime.audio.fadeDurationMs : 800
+      });
+    }
+    return dramaticBed;
+  }
+
+  function updateDramaticMusicForScene(scene) {
+    const delayMs =
+      typeof runtime.audio?.dramaticMusicDelayMs === 'number'
+        ? runtime.audio.dramaticMusicDelayMs
+        : 10000;
+    const fadeMs =
+      typeof runtime.audio?.fadeDurationMs === 'number' ? runtime.audio.fadeDurationMs : 800;
+
+    if (scene.sceneId === TITLE_SCENE_ID) {
+      if (dramaticStartTimer) {
+        clearTimeout(dramaticStartTimer);
+        dramaticStartTimer = null;
+      }
+      if (dramaticBed) {
+        dramaticBed.fadeOut(fadeMs, () => {
+          dramaticBed = null;
+        });
+      }
+      return;
+    }
+
+    if (scene.sceneId === OPENING_SCENE_ID) {
+      if (dramaticStartTimer) {
+        clearTimeout(dramaticStartTimer);
+      }
+      dramaticStartTimer = setTimeout(() => {
+        dramaticStartTimer = null;
+        const bed = ensureDramaticBedController();
+        const fadeMs =
+          typeof runtime.audio?.fadeDurationMs === 'number' ? runtime.audio.fadeDurationMs : 800;
+        bed?.rampForegroundGain(fadeMs);
+        queueMicrotask(() => dramaticBed?.resumeFromUserGesture?.());
+      }, delayMs);
+    }
+  }
+
+  function unlockExhibitAudio() {
+    projectionView.unlockAudio();
+    windBed?.resumeFromUserGesture?.();
+    media.resumeFromUserGesture();
+    const bed = ensureDramaticBedController();
+    bed?.start({ silent: true });
+    dramaticBed?.resumeFromUserGesture?.();
+  }
+  for (const evt of ['pointerdown', 'keydown', 'touchstart']) {
+    window.addEventListener(evt, unlockExhibitAudio, { capture: true });
+  }
 
   /** Avoid restarting the same background clip when branching timeout targets the current scene. */
   let lastAppliedMediaKey = null;
@@ -97,6 +186,8 @@ new p5((p) => {
         }
       }
     });
+
+    updateDramaticMusicForScene(scene);
 
     pushLog(`Scene changed to ${scene.sceneId} from ${source}`);
   }
@@ -196,6 +287,7 @@ new p5((p) => {
     projectionView.mount(document.body);
 
     applyScene(stateMachine.getCurrentScene(), 'startup');
+    ensureWindBed();
     network.connect();
   };
 
