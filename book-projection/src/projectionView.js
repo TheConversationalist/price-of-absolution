@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 
 const HANDLE_HIT_PX = 40;
-/** Wrapped localStorage shape; legacy plain `[[x,y],...]` array still loads. */
-const PROJECTION_LS_VERSION = 1;
+/** v1: pixel corners (+ optional viewport); v2: corners as 0–1 normalized in current space. */
+const PROJECTION_LS_V1 = 1;
+const PROJECTION_LS_V2 = 2;
 
 function parseCornersArray(rawCorners) {
   if (!Array.isArray(rawCorners) || rawCorners.length !== 4) {
@@ -21,6 +22,61 @@ function parseCornersArray(rawCorners) {
   return out;
 }
 
+function parseNormCorners(rawCorners) {
+  if (!Array.isArray(rawCorners) || rawCorners.length !== 4) {
+    return null;
+  }
+  const out = rawCorners.map((p) => {
+    if (!Array.isArray(p) || p.length !== 2) return null;
+    const u = Number(p[0]);
+    const v = Number(p[1]);
+    if (!Number.isFinite(u) || !Number.isFinite(v)) return null;
+    return [u, v];
+  });
+  if (out.some((c) => c == null)) {
+    return null;
+  }
+  return out;
+}
+
+function denormCorners(norm, w, h) {
+  return norm.map(([u, v]) => [
+    Math.max(0, Math.min(w - 1, u * w)),
+    Math.max(0, Math.min(h - 1, v * h))
+  ]);
+}
+
+function normCorners(px, w, h) {
+  const ww = Math.max(1, w);
+  const hh = Math.max(1, h);
+  return px.map(([x, y]) => [x / ww, y / hh]);
+}
+
+/** v1 pixel corners → normalized units using saved or inferred viewport size. */
+function pixelCornersToNormForLoad(pixelCorners, w, h, viewportW, viewportH) {
+  const mx = Math.max(
+    pixelCorners[0][0],
+    pixelCorners[1][0],
+    pixelCorners[2][0],
+    pixelCorners[3][0]
+  );
+  const my = Math.max(
+    pixelCorners[0][1],
+    pixelCorners[1][1],
+    pixelCorners[2][1],
+    pixelCorners[3][1]
+  );
+  const ow =
+    Number.isFinite(viewportW) && viewportW > 0
+      ? viewportW
+      : Math.max(mx + 1, w, 1);
+  const oh =
+    Number.isFinite(viewportH) && viewportH > 0
+      ? viewportH
+      : Math.max(my + 1, h, 1);
+  return pixelCorners.map(([x, y]) => [x / ow, y / oh]);
+}
+
 /**
  * @returns {{ cornersPx: number[][], gridSegments: number | null }}
  */
@@ -29,18 +85,31 @@ function loadProjectionState(storageKey, w, h, runtimeConfig) {
     const raw = localStorage.getItem(storageKey);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && parsed.v === PROJECTION_LS_VERSION) {
-        const cornersPx = parseCornersArray(parsed.corners);
-        if (cornersPx) {
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && parsed.v === PROJECTION_LS_V2) {
+        const norm = parseNormCorners(parsed.corners);
+        if (norm) {
           const g = Number(parsed.gridSegments);
           const gridSegments =
             Number.isFinite(g) && g >= 2 ? Math.min(128, Math.round(g)) : null;
-          return { cornersPx, gridSegments };
+          return { cornersPx: denormCorners(norm, w, h), gridSegments };
+        }
+      }
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && parsed.v === PROJECTION_LS_V1) {
+        const pixelC = parseCornersArray(parsed.corners);
+        if (pixelC) {
+          const g = Number(parsed.gridSegments);
+          const gridSegments =
+            Number.isFinite(g) && g >= 2 ? Math.min(128, Math.round(g)) : null;
+          const vpW = Number(parsed.viewportW);
+          const vpH = Number(parsed.viewportH);
+          const norm = pixelCornersToNormForLoad(pixelC, w, h, vpW, vpH);
+          return { cornersPx: denormCorners(norm, w, h), gridSegments };
         }
       }
       const legacy = parseCornersArray(parsed);
       if (legacy) {
-        return { cornersPx: legacy, gridSegments: null };
+        const norm = pixelCornersToNormForLoad(legacy, w, h, NaN, NaN);
+        return { cornersPx: denormCorners(norm, w, h), gridSegments: null };
       }
     }
   } catch {
@@ -58,12 +127,18 @@ function loadProjectionState(storageKey, w, h, runtimeConfig) {
 
 function saveProjectionState(storageKey, cornersPx, gridSegments) {
   try {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    if (w <= 0 || h <= 0 || cornersPx.length !== 4) {
+      return;
+    }
     const g = Math.max(2, Math.min(128, Math.round(gridSegments)));
+    const norm = normCorners(cornersPx, w, h);
     localStorage.setItem(
       storageKey,
       JSON.stringify({
-        v: PROJECTION_LS_VERSION,
-        corners: cornersPx,
+        v: PROJECTION_LS_V2,
+        corners: norm,
         gridSegments: g
       })
     );
@@ -203,10 +278,15 @@ export class ProjectionView {
     /** When true, video stays on frame 0 and does not play until the next load. */
     this._holdFirstFrame = false;
 
+    /** Previous window size for resizing the quad proportionally (fullscreen ↔ windowed). */
+    this._lastViewportW = 0;
+    this._lastViewportH = 0;
+
     this._onPointerDown = this._onPointerDown.bind(this);
     this._onPointerMove = this._onPointerMove.bind(this);
     this._onPointerUp = this._onPointerUp.bind(this);
     this._onResize = this._onResize.bind(this);
+    this._onFullscreenChange = this._onFullscreenChange.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
     this._unlockVideoAudio = this._unlockVideoAudio.bind(this);
     /** Public alias for sketch / kiosk: unmutes background video after a user gesture. */
@@ -267,6 +347,11 @@ export class ProjectionView {
 
     this._syncHandleScales();
 
+    this._lastViewportW = w;
+    this._lastViewportH = h;
+
+    saveProjectionState(this.storageKey, this.cornersPx, this.gridSegments);
+
     this._syncPointerEvents();
 
     const canvas = this.renderer.domElement;
@@ -275,6 +360,8 @@ export class ProjectionView {
     canvas.addEventListener('pointerup', this._onPointerUp);
     canvas.addEventListener('pointercancel', this._onPointerUp);
     window.addEventListener('resize', this._onResize);
+    document.addEventListener('fullscreenchange', this._onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', this._onFullscreenChange);
     window.addEventListener('keydown', this._onKeyDown);
   }
 
@@ -440,6 +527,33 @@ export class ProjectionView {
     });
     this._syncHandleScales();
     saveProjectionState(this.storageKey, this.cornersPx, this.gridSegments);
+    this._lastViewportW = w;
+    this._lastViewportH = h;
+  }
+
+  _onFullscreenChange() {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => this._onResize());
+    });
+  }
+
+  _onResize() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const ow = this._lastViewportW > 0 ? this._lastViewportW : w;
+    const oh = this._lastViewportH > 0 ? this._lastViewportH : h;
+    this.renderer.setSize(w, h);
+    if (this.cornersPx.length === 4 && ow > 0 && oh > 0) {
+      this.cornersPx = this.cornersPx.map(([x, y]) => {
+        const u = x / ow;
+        const v = y / oh;
+        return [
+          Math.max(0, Math.min(w - 1, u * w)),
+          Math.max(0, Math.min(h - 1, v * h))
+        ];
+      });
+    }
+    this._refreshQuadGeometry();
   }
 
   _syncHandleScales() {
@@ -502,14 +616,6 @@ export class ProjectionView {
       }
     }
     this.dragIndex = -1;
-  }
-
-  _onResize() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    this.renderer.setSize(w, h);
-    this.cornersPx = this.cornersPx.map(([x, y]) => [Math.min(x, w - 1), Math.min(y, h - 1)]);
-    this._refreshQuadGeometry();
   }
 
   _onKeyDown(e) {
