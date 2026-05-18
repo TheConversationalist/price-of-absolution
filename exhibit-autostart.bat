@@ -18,14 +18,17 @@ if errorlevel 1 (
   exit /b 1
 )
 
+for /f "delims=" %%I in ('powershell -NoProfile -Command "(Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -notmatch 'Loopback' -and $_.IPAddress -notmatch '^169\.254\.' } | Select-Object -First 1 -ExpandProperty IPAddress)"') do set "LAN_IP=%%I"
+if not defined LAN_IP set "LAN_IP=YOUR_LAN_IP"
+
 echo [exhibit] Starting sync server (port 8787)...
 start "POA Sync" cmd /k "cd /d "%ROOT%" && npm.cmd run dev:sync"
 
 echo [exhibit] Starting book projection (port %BOOK_PORT%)...
-start "POA Book" cmd /k "cd /d "%ROOT%" && npm.cmd run dev:book -- --host --port %BOOK_PORT% --strictPort"
+start "POA Book" cmd /k "cd /d "%ROOT%" && npm.cmd run dev:book"
 
 echo [exhibit] Starting tablet controller (port %TABLET_PORT%)...
-start "POA Tablet" cmd /k "cd /d "%ROOT%" && npm.cmd run dev:tablet -- --host --port %TABLET_PORT% --strictPort"
+start "POA Tablet" cmd /k "cd /d "%ROOT%" && npm.cmd run dev:tablet"
 
 echo [exhibit] Waiting for book server on port %BOOK_PORT%...
 set /a WAIT=0
@@ -55,7 +58,7 @@ if not defined CHROME if exist "%LocalAppData%\Google\Chrome\Application\chrome.
 
 if not defined CHROME (
   echo [exhibit] Google Chrome not found. Open %BOOK_URL% manually in kiosk/fullscreen.
-  echo [exhibit] Tablet on another device: http://YOUR_LAN_IP:%TABLET_PORT%/
+  echo [exhibit] Tablet: http://%LAN_IP%:%TABLET_PORT%/
   pause
   exit /b 0
 )
@@ -75,10 +78,10 @@ start "" "%CHROME%" ^
 echo.
 echo [exhibit] Running.
 echo   Book (projector):  %BOOK_URL%
-echo   Tablet (LAN):      http://YOUR_LAN_IP:%TABLET_PORT%/
-echo   Sync WebSocket:    ws://YOUR_LAN_IP:8787
+echo   Tablet (LAN):      http://%LAN_IP%:%TABLET_PORT%/
+echo   Sync (direct WS):  ws://%LAN_IP%:8787  (apps use /sync-ws via Vite)
 echo.
-echo Close the POA Sync / Book / Tablet windows to stop servers.
-echo Exit kiosk: Alt+F4
+echo In POA Book / Tablet windows you should see "Network: http://%LAN_IP%:PORT/"
+echo Close those windows to stop servers. Exit kiosk: Alt+F4
 
 endlocal

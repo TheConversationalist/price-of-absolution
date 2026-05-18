@@ -9,6 +9,8 @@ export default defineConfig({
   },
   server: {
     host: true,
+    port: 5174,
+    strictPort: true,
     proxy: {
       '/sync-ws': {
         target: 'http://127.0.0.1:8787',
