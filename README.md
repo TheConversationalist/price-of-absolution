@@ -36,3 +36,34 @@ Interactive Arctic solo-survival story proof-of-concept.
 - With sync server running, execute deterministic event walkthrough:
   - `npm run demo:replay`
 - This sends scripted story events for repeatable projection/tablet demo flow.
+
+## Pushing to GitHub
+
+Remote: `https://github.com/TheConversationalist/price-of-absolution.git` (`origin`, branch `main`).
+
+Large media stays local (see `.gitignore`): `assets/video/`, `*.mp4`, `assets/wind-sfx.wav`.
+
+**One-time setup** (Git + GitHub CLI; installs `gh` via winget if needed):
+
+```powershell
+.\scripts\setup-github-push.ps1
+```
+
+That script sets git name/email **for this repo only** (local `git config`, not global), runs `gh auth login`, and wires Git Credential Manager for HTTPS pushes.
+
+**Push changes:**
+
+```powershell
+git add -A
+git commit -m "Describe your change"
+git push origin main
+```
+
+If you lack write access to `TheConversationalist/price-of-absolution`, fork on GitHub then:
+
+```powershell
+gh repo fork TheConversationalist/price-of-absolution --remote=true
+git push -u origin main
+```
+
+Optional LAN overrides: copy `.env.example` to `.env` and set `VITE_SYNC_SERVER_URL` (not committed).

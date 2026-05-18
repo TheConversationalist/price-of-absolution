@@ -66,11 +66,7 @@ new p5((p) => {
     }
     lastAppliedMediaKey = mediaKey;
 
-    network.send('sceneChanged', {
-      sceneId: scene.sceneId,
-      source,
-      clipDurationSeconds: null
-    });
+    publishSceneToSync(scene, source);
 
     const syncClip =
       runtime.playback?.syncTabletTimerToVideo !== false && Boolean(scene.backgroundVideo);
@@ -86,11 +82,7 @@ new p5((p) => {
         if (!Number.isFinite(sec) || sec <= 0) {
           return;
         }
-        network.send('sceneChanged', {
-          sceneId: scene.sceneId,
-          source,
-          clipDurationSeconds: sec
-        });
+        publishSceneToSync(scene, source, sec);
       },
       onVideoEnded: () => {
         if (!scene.backgroundVideo) {
@@ -109,8 +101,23 @@ new p5((p) => {
     pushLog(`Scene changed to ${scene.sceneId} from ${source}`);
   }
 
+  function publishSceneToSync(scene, source, clipDurationSeconds = null) {
+    if (!scene) {
+      return;
+    }
+    network.send('sceneChanged', {
+      sceneId: scene.sceneId,
+      source,
+      clipDurationSeconds
+    });
+  }
+
   const network = new NetworkClient(getSyncServerUrl(runtime.network.serverUrl), {
-    onOpen: () => pushLog('Connected to sync server'),
+    onOpen: () => {
+      pushLog('Connected to sync server');
+      // Startup applyScene runs before connect(); push state so tablet stays in sync.
+      publishSceneToSync(stateMachine.getCurrentScene(), 'book-reconnect');
+    },
     onClose: () => pushLog('Disconnected from sync server; reconnecting'),
     onEvent: (event) => {
       if (event.type === 'chooseOption') {
@@ -158,11 +165,7 @@ new p5((p) => {
         applyScene(scene, event.type);
       }
 
-      if (event.type === 'sceneSync' && event.payload?.sceneId) {
-        if (stateMachine.transitionToScene(event.payload.sceneId)) {
-          applyScene(stateMachine.getCurrentScene(), 'server-sync');
-        }
-      }
+      // Book is scene master; sceneSync is for tablet reconnect only.
 
       if (event.type === 'diceRollResult') {
         pushLog(`Dice result received: ${event.payload.value}`);
