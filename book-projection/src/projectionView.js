@@ -1,23 +1,46 @@
 import * as THREE from 'three';
 
 const HANDLE_HIT_PX = 40;
+/** Wrapped localStorage shape; legacy plain `[[x,y],...]` array still loads. */
+const PROJECTION_LS_VERSION = 1;
 
-function loadCorners(storageKey, w, h, runtimeConfig) {
+function parseCornersArray(rawCorners) {
+  if (!Array.isArray(rawCorners) || rawCorners.length !== 4) {
+    return null;
+  }
+  const out = rawCorners.map((p) => {
+    if (!Array.isArray(p) || p.length !== 2) return null;
+    const x = Number(p[0]);
+    const y = Number(p[1]);
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+    return [x, y];
+  });
+  if (out.some((c) => c == null)) {
+    return null;
+  }
+  return out;
+}
+
+/**
+ * @returns {{ cornersPx: number[][], gridSegments: number | null }}
+ */
+function loadProjectionState(storageKey, w, h, runtimeConfig) {
   try {
     const raw = localStorage.getItem(storageKey);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length === 4) {
-        const out = parsed.map((p) => {
-          if (!Array.isArray(p) || p.length !== 2) return null;
-          const x = Number(p[0]);
-          const y = Number(p[1]);
-          if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
-          return [x, y];
-        });
-        if (!out.some((c) => c == null)) {
-          return out;
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && parsed.v === PROJECTION_LS_VERSION) {
+        const cornersPx = parseCornersArray(parsed.corners);
+        if (cornersPx) {
+          const g = Number(parsed.gridSegments);
+          const gridSegments =
+            Number.isFinite(g) && g >= 2 ? Math.min(128, Math.round(g)) : null;
+          return { cornersPx, gridSegments };
         }
+      }
+      const legacy = parseCornersArray(parsed);
+      if (legacy) {
+        return { cornersPx: legacy, gridSegments: null };
       }
     }
   } catch {
@@ -25,23 +48,25 @@ function loadCorners(storageKey, w, h, runtimeConfig) {
   }
   const rc = runtimeConfig?.projection?.corners;
   if (Array.isArray(rc) && rc.length === 4) {
-    const out = rc.map((p) => {
-      if (!Array.isArray(p) || p.length !== 2) return null;
-      const x = Number(p[0]);
-      const y = Number(p[1]);
-      if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
-      return [x, y];
-    });
-    if (!out.some((c) => c == null)) {
-      return out;
+    const fromRc = parseCornersArray(rc);
+    if (fromRc) {
+      return { cornersPx: fromRc, gridSegments: null };
     }
   }
-  return defaultCorners(w, h);
+  return { cornersPx: defaultCorners(w, h), gridSegments: null };
 }
 
-function saveCorners(storageKey, cornersPx) {
+function saveProjectionState(storageKey, cornersPx, gridSegments) {
   try {
-    localStorage.setItem(storageKey, JSON.stringify(cornersPx));
+    const g = Math.max(2, Math.min(128, Math.round(gridSegments)));
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        v: PROJECTION_LS_VERSION,
+        corners: cornersPx,
+        gridSegments: g
+      })
+    );
   } catch {
     /* ignore */
   }
@@ -195,11 +220,15 @@ export class ProjectionView {
     if (next === this.mappingMode) {
       return;
     }
+    const wasMapping = this.mappingMode;
     this.mappingMode = next;
     this.handles.forEach((h) => {
       h.visible = this.mappingMode;
     });
     this._syncPointerEvents();
+    if (wasMapping && !next && this.quadMesh) {
+      saveProjectionState(this.storageKey, this.cornersPx, this.gridSegments);
+    }
     this.onMappingModeChange?.(this.mappingMode);
   }
 
@@ -218,7 +247,11 @@ export class ProjectionView {
     const w = window.innerWidth;
     const h = window.innerHeight;
     this.renderer.setSize(w, h);
-    this.cornersPx = loadCorners(this.storageKey, w, h, this.runtimeConfig);
+    const loaded = loadProjectionState(this.storageKey, w, h, this.runtimeConfig);
+    this.cornersPx = loaded.cornersPx;
+    if (loaded.gridSegments != null) {
+      this.gridSegments = loaded.gridSegments;
+    }
 
     const geo = buildSubdividedQuadGeometry(this.cornersPx, w, h, this.gridSegments, this.gridSegments);
     this.quadMesh = new THREE.Mesh(geo, this.quadMat);
@@ -406,7 +439,7 @@ export class ProjectionView {
       this.handles[i].position.copy(ndc);
     });
     this._syncHandleScales();
-    saveCorners(this.storageKey, this.cornersPx);
+    saveProjectionState(this.storageKey, this.cornersPx, this.gridSegments);
   }
 
   _syncHandleScales() {
