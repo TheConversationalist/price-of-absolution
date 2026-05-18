@@ -9,7 +9,8 @@ set "PATH=C:\Program Files\nodejs;%PATH%"
 
 set "BOOK_PORT=5173"
 set "TABLET_PORT=5174"
-set "BOOK_URL=http://127.0.0.1:%BOOK_PORT%/"
+set "BOOK_URL=http://127.0.0.1:%BOOK_PORT%/?kiosk=1"
+set "CHROME_PROFILE=%ROOT%\.chrome-exhibit-kiosk"
 
 where npm.cmd >nul 2>&1
 if errorlevel 1 (
@@ -63,14 +64,23 @@ if not defined CHROME (
   exit /b 0
 )
 
+if not exist "%CHROME_PROFILE%" mkdir "%CHROME_PROFILE%"
+
 echo [exhibit] Launching Chrome kiosk: %BOOK_URL%
 start "" "%CHROME%" ^
+  --user-data-dir="%CHROME_PROFILE%" ^
   --kiosk ^
+  --start-fullscreen ^
   --autoplay-policy=no-user-gesture-required ^
   --no-first-run ^
+  --no-default-browser-check ^
   --disable-infobars ^
   --disable-session-crashed-bubble ^
   --disable-translate ^
+  --disable-notifications ^
+  --disable-popup-blocking ^
+  --disable-pinch ^
+  --overscroll-history-navigation=0 ^
   --disable-features=TranslateUI ^
   --new-window ^
   "%BOOK_URL%"

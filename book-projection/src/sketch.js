@@ -12,7 +12,13 @@ import { startWindBed } from './windBed.js';
 const OPENING_SCENE_ID = 'scene_01_opening';
 const TITLE_SCENE_ID = 'scene_00_title';
 
+function isKioskMode() {
+  const q = new URLSearchParams(window.location.search);
+  return q.has('kiosk') || q.get('autoplay') === '1';
+}
+
 const stateMachine = new StoryStateMachine(story);
+const kioskMode = isKioskMode();
 
 new p5((p) => {
   const logLines = [];
@@ -28,6 +34,7 @@ new p5((p) => {
 
   const projectionView = new ProjectionView({
     runtimeConfig: runtime,
+    autoUnlockAudio: kioskMode,
     onMappingModeChange: (on) =>
       pushLog(
         on
@@ -134,6 +141,17 @@ new p5((p) => {
     bed?.start({ silent: true });
     dramaticBed?.resumeFromUserGesture?.();
   }
+
+  function scheduleKioskAudioUnlock() {
+    if (!kioskMode) {
+      return;
+    }
+    unlockExhibitAudio();
+    queueMicrotask(unlockExhibitAudio);
+    window.setTimeout(unlockExhibitAudio, 500);
+    window.setTimeout(unlockExhibitAudio, 2000);
+  }
+
   for (const evt of ['pointerdown', 'keydown', 'touchstart']) {
     window.addEventListener(evt, unlockExhibitAudio, { capture: true });
   }
@@ -288,6 +306,10 @@ new p5((p) => {
 
     applyScene(stateMachine.getCurrentScene(), 'startup');
     ensureWindBed();
+    scheduleKioskAudioUnlock();
+    if (kioskMode && document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
     network.connect();
   };
 

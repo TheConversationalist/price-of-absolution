@@ -226,6 +226,8 @@ export class ProjectionView {
     this.storageKey = options.storageKey ?? 'price-of-absolution:projectionQuad';
     this.gridSegments = options.gridSegments ?? 32;
     this.runtimeConfig = options.runtimeConfig ?? {};
+    /** When true (kiosk / ?kiosk=1), unmute background video without a user gesture. */
+    this.autoUnlockAudio = options.autoUnlockAudio === true;
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -457,6 +459,10 @@ export class ProjectionView {
       this.video.addEventListener('loadeddata', freezeOnFrame0, { once: true });
     } else {
       this.video.play().catch(() => {});
+    }
+
+    if (this.autoUnlockAudio && videoVolume > 0) {
+      this._unlockVideoAudio();
     }
   }
 
