@@ -37,8 +37,8 @@
       "timeoutSeconds": 25,
       "choicesRevealSecondsBeforeEnd": 8,
       "onTimeout": "scene_00_title",
-      "choiceIds": ["track1_peek", "track1_huddle"],
-      "choiceLabels": ["Peek out the window", "Join the huddle"]
+      "choiceIds": ["track2_watch", "track2_inside"],
+      "choiceLabels": ["Watch them pass by", "Go inside"]
     },
     "scene_02_track2": {
       "displayText": "You went in for dinner, but the outside world still moves. Watch them pass or stay inside?",
@@ -46,8 +46,8 @@
       "timeoutSeconds": 25,
       "choicesRevealSecondsBeforeEnd": 8,
       "onTimeout": "scene_00_title",
-      "choiceIds": ["track2_watch", "track2_inside"],
-      "choiceLabels": ["Watch them pass by", "Go inside"]
+      "choiceIds": ["track1_peek", "track1_huddle"],
+      "choiceLabels": ["Peek out the window", "Join the huddle"]
     },
     "scene_03_t1_peek": {
       "displayText": "A quiet hinge turns. The story moves toward the peek ending.",

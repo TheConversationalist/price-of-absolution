@@ -7,14 +7,14 @@ The evening is settling. What do you do next?
 [[Finish weaving the hammock->scene_02_track1]]
 
 :: scene_02_track1
-You stay with the weave; voices drift from the house. How do you respond?
-[[Peek out the window->scene_03_t1_peek]]
-[[Join the huddle->scene_03_t1_huddle]]
-
-:: scene_02_track2
-You head in for dinner, but something outside still pulls at you.
+You stay with the hammock. Do you peek out the window or join the huddle?
 [[Watch them pass by->scene_03_t2_watch]]
 [[Go inside->scene_03_t2_inside]]
+
+:: scene_02_track2
+You went in for dinner, but the outside world still moves. Watch them pass or stay inside?
+[[Peek out the window->scene_03_t1_peek]]
+[[Join the huddle->scene_03_t1_huddle]]
 
 :: scene_03_t1_peek
 The glass frames a small, decisive moment. The story leans toward the peek ending.

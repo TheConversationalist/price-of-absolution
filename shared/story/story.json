@@ -57,14 +57,14 @@
       "onTimeout": "scene_00_title",
       "choices": [
         {
-          "id": "track1_peek",
-          "label": "Peek out the window",
-          "targetSceneId": "scene_03_t1_peek"
+          "id": "track2_watch",
+          "label": "Watch them pass by",
+          "targetSceneId": "scene_03_t2_watch"
         },
         {
-          "id": "track1_huddle",
-          "label": "Join the huddle",
-          "targetSceneId": "scene_03_t1_huddle"
+          "id": "track2_inside",
+          "label": "Go inside",
+          "targetSceneId": "scene_03_t2_inside"
         }
       ]
     },
@@ -80,14 +80,14 @@
       "onTimeout": "scene_00_title",
       "choices": [
         {
-          "id": "track2_watch",
-          "label": "Watch them pass by",
-          "targetSceneId": "scene_03_t2_watch"
+          "id": "track1_peek",
+          "label": "Peek out the window",
+          "targetSceneId": "scene_03_t1_peek"
         },
         {
-          "id": "track2_inside",
-          "label": "Go inside",
-          "targetSceneId": "scene_03_t2_inside"
+          "id": "track1_huddle",
+          "label": "Join the huddle",
+          "targetSceneId": "scene_03_t1_huddle"
         }
       ]
     },
